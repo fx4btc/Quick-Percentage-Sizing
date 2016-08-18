@@ -17,7 +17,7 @@ namespace cAlgo
     public class QuickPercentageSizing : Robot
     {
         // Parameters
-        [Parameter("Default Symbols", DefaultValue = "EURUSD GBPUSD EURJPY USDJPY AUDUSD USDCHF GBPJPY USDCAD EURGBP EURCHF AUDJPY NZDUSD CHFJPY EURAUD CADJPY GBPAUD EURCAD AUDCAD GBPCAD AUDNZD NZDJPY AUDCHF GBPNZD EURNZD CADCHF NZDCAD NZDCHF GBPCHF XAUUSD XAGUSD")]
+        [Parameter("Default Symbols", DefaultValue = "EURUSD GBPUSD EURJPY USDJPY AUDUSD USDCHF GBPJPY USDCAD EURGBP EURCHF AUDJPY NZDUSD CHFJPY EURAUD CADJPY GBPAUD EURCAD AUDCAD GBPCAD AUDNZD NZDJPY AUDCHF GBPNZD EURNZD CADCHF NZDCAD NZDCHF GBPCHF")]
         public string defaultSymbols { get; set; }
 
         // Controls
@@ -31,7 +31,6 @@ namespace cAlgo
         private MetroButton MoveDownButton;
         private MetroButton DeleteSymbolsButton;
         private MetroButton SaveButton;
-        private MetroLabel AccountTypeLabel;
         private MetroLabel PercentLabel;
         private MetroLabel SymbolsLabel;
         private MetroLabel SLAndTPLabel;
@@ -106,7 +105,7 @@ namespace cAlgo
             // MainForm
             //
             MainForm = new MetroForm();
-            MainForm.AutoScaleDimensions = new SizeF(8F, 16F);
+            MainForm.AutoScaleDimensions = new SizeF(8f, 16f);
             MainForm.AutoScaleMode = AutoScaleMode.Font;
             MainForm.ClientSize = new Size(259, 177);
             MainForm.MaximizeBox = false;
@@ -159,20 +158,24 @@ namespace cAlgo
             // 
             PercentNumber = new NumericUpDown();
             PercentNumber.DecimalPlaces = 1;
-            PercentNumber.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
+            PercentNumber.Increment = new decimal(new int[] 
+            {
+                1,
+                0,
+                0,
+                65536
+            });
             PercentNumber.Location = new Point(112, 61);
             PercentNumber.Name = "PercentNumber";
             PercentNumber.Size = new Size(50, 22);
             PercentNumber.ThousandsSeparator = true;
-            PercentNumber.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            PercentNumber.Value = new decimal(new int[] 
+            {
+                1,
+                0,
+                0,
+                0
+            });
             // 
             // PercentLabel
             // 
@@ -222,25 +225,31 @@ namespace cAlgo
             // 
             SlippageNumber = new NumericUpDown();
             SlippageNumber.DecimalPlaces = 1;
-            SlippageNumber.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
+            SlippageNumber.Increment = new decimal(new int[] 
+            {
+                1,
+                0,
+                0,
+                65536
+            });
             SlippageNumber.Location = new Point(112, 93);
-            SlippageNumber.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            SlippageNumber.Minimum = new decimal(new int[] 
+            {
+                1,
+                0,
+                0,
+                0
+            });
             SlippageNumber.Name = "SlippageNumber";
             SlippageNumber.Size = new Size(50, 22);
             SlippageNumber.ThousandsSeparator = true;
-            SlippageNumber.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            SlippageNumber.Value = new decimal(new int[] 
+            {
+                1,
+                0,
+                0,
+                0
+            });
             // 
             // SlippagePipsLabel
             // 
@@ -258,7 +267,7 @@ namespace cAlgo
 
 
             // Adding Controls
-            MainForm.Controls.AddRange(new Control[]
+            MainForm.Controls.AddRange(new Control[] 
             {
                 SymbolsComboBox,
                 PercentNumber,
@@ -562,7 +571,7 @@ namespace cAlgo
             OptionsProgressBar.Visible = false;
 
             // Adding Controls
-            OptionsForm.Controls.AddRange(new Control[]
+            OptionsForm.Controls.AddRange(new Control[] 
             {
                 SymbolsGrid,
                 SymbolsLabel,
@@ -666,7 +675,7 @@ namespace cAlgo
 
             if (ATRSL || ATRTP)
             {
-                Task getSeries = Task.Factory.StartNew(() => 
+                Task getSeries = Task.Factory.StartNew(() =>
                 {
                     OptionsForm.Enabled = false;
 
@@ -674,7 +683,7 @@ namespace cAlgo
                     OptionsProgressBar.Visible = true;
                     OptionsProgressBar.Maximum = SymbolsList.Count;
                     OptionsProgressBar.Value = 0;
-     
+
                     foreach (string sym in SymbolsList)
                     {
                         MarketSeries symSeries = MarketData.GetSeries(sym, MarketSeries.TimeFrame);
@@ -800,8 +809,7 @@ namespace cAlgo
 
                     SymbolsGrid.FirstDisplayedScrollingRowIndex = previousRow.Index;
                     SymbolsGrid.PerformLayout();
-                }
-                catch (ArgumentOutOfRangeException)
+                } catch (ArgumentOutOfRangeException)
                 {
                     Print("Symbol was out of range.");
                 }
@@ -827,8 +835,7 @@ namespace cAlgo
 
                     SymbolsGrid.FirstDisplayedScrollingRowIndex = nextRow.Index;
                     SymbolsGrid.PerformLayout();
-                }
-                catch (ArgumentOutOfRangeException)
+                } catch (ArgumentOutOfRangeException)
                 {
                     Print("Symbol was out of range.");
                 }
