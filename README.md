@@ -2,3 +2,5 @@
 It's a cAlgo / cTrader project.
 
 By using this program you will be able to quickly size your positions on cTrader based on percentage instead of fixed volume sizing.
+
+More detail : http://ctdn.com/algos/show/1437
