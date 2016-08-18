@@ -11,9 +11,9 @@ using MetroFramework.Forms;
 
 namespace Quick_Percentage_Sizing_Form
 {
-    public partial class Form1 : MetroForm
+    public partial class MainForm : MetroForm
     {
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
         }

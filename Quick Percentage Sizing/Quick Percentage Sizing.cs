@@ -57,7 +57,10 @@ namespace cAlgo
         private MetroTextBox ATRPeriodsTPTextBox;
         private MetroGrid SymbolsGrid;
         private MetroProgressBar OptionsProgressBar;
-
+        private MetroLabel RiskLabel;
+        private MetroLabel SlippageLabel;
+        private NumericUpDown SlippageNumber;
+        private MetroLabel SlippagePipsLabel;
 
 
 
@@ -99,88 +102,159 @@ namespace cAlgo
         // Main Form Initializer
         private void MainFormInitializer()
         {
-            // Form
+            // 
+            // MainForm
+            //
             MainForm = new MetroForm();
+            MainForm.AutoScaleDimensions = new SizeF(8F, 16F);
+            MainForm.AutoScaleMode = AutoScaleMode.Font;
+            MainForm.ClientSize = new Size(259, 177);
+            MainForm.MaximizeBox = false;
             MainForm.Name = "MainForm";
-            MainForm.Text = "";
-            MainForm.Size = new Size(248, 130);
-            MainForm.StartPosition = FormStartPosition.CenterScreen;
             MainForm.Resizable = false;
+            MainForm.ShowIcon = false;
             MainForm.Theme = MetroFramework.MetroThemeStyle.Dark;
             MainForm.Style = MetroFramework.MetroColorStyle.Blue;
-            MainForm.MaximizeBox = false;
-            MainForm.ShowIcon = false;
             MainForm.Shown += new EventHandler(MainFormShown);
+            MainForm.StartPosition = FormStartPosition.CenterScreen;
             MainForm.FormClosed += new FormClosedEventHandler(MainFormClosed);
 
-            // ComboBox
+
+            // 
+            // SymbolsComboBox
+            // 
+
             SymbolsComboBox = new MetroComboBox();
             SymbolsComboBox.Name = "SymbolsComboBox";
-            SymbolsComboBox.Size = new Size(121, 30);
-            SymbolsComboBox.Location = new Point(23, 17);
+            SymbolsComboBox.FormattingEnabled = true;
+            SymbolsComboBox.ItemHeight = 24;
+            SymbolsComboBox.Location = new Point(23, 18);
+            SymbolsComboBox.Size = new Size(139, 30);
+            SymbolsComboBox.UseSelectable = true;
 
             FillSymbolsComboBox();
 
-            // Buttons
-            BuyButton = new MetroButton();
-            BuyButton.Name = "BuyButton";
-            BuyButton.Text = "Buy";
-            BuyButton.Size = new Size(50, 23);
-            BuyButton.Location = new Point(23, 101);
-            BuyButton.TextAlign = ContentAlignment.MiddleCenter;
-            BuyButton.FontWeight = MetroFramework.MetroButtonWeight.Bold;
-            BuyButton.Click += new EventHandler(ExecuteBuyOrder);
-
+            // 
+            // SellButton
+            // 
             SellButton = new MetroButton();
+            SellButton.Location = new Point(94, 136);
             SellButton.Name = "SellButton";
-            SellButton.Text = "Sell";
             SellButton.Size = new Size(50, 23);
-            SellButton.Location = new Point(94, 101);
-            SellButton.TextAlign = ContentAlignment.MiddleCenter;
-            SellButton.FontWeight = MetroFramework.MetroButtonWeight.Bold;
+            SellButton.Text = "Sell";
+            SellButton.UseSelectable = true;
             SellButton.Click += new EventHandler(ExecuteSellOrder);
-
-
-            OptionsButton = new MetroButton();
-            OptionsButton.Name = "OptionsButton";
-            OptionsButton.Text = "Options";
-            OptionsButton.Size = new Size(76, 23);
-            OptionsButton.Location = new Point(158, 63);
-            OptionsButton.TextAlign = ContentAlignment.MiddleCenter;
-            OptionsButton.FontWeight = MetroFramework.MetroButtonWeight.Bold;
-            OptionsButton.Click += new EventHandler(ShowOptionsForm);
-
-
-            // Numeric Up Down
+            // 
+            // BuyButton
+            // 
+            BuyButton = new MetroButton();
+            BuyButton.Location = new Point(23, 136);
+            BuyButton.Name = "BuyButton";
+            BuyButton.Size = new Size(50, 23);
+            BuyButton.Text = "Buy";
+            BuyButton.UseSelectable = true;
+            BuyButton.Click += new EventHandler(ExecuteBuyOrder);
+            // 
+            // PercentNumber
+            // 
             PercentNumber = new NumericUpDown();
-            PercentNumber.Name = "PercentNumber";
             PercentNumber.DecimalPlaces = 1;
-            PercentNumber.Value = 1;
-            PercentNumber.Size = new Size(64, 22);
-            PercentNumber.Location = new Point(39, 61);
-            PercentNumber.Increment = 0.1m;
-
-
-            // Label
+            PercentNumber.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            PercentNumber.Location = new Point(112, 61);
+            PercentNumber.Name = "PercentNumber";
+            PercentNumber.Size = new Size(50, 22);
+            PercentNumber.ThousandsSeparator = true;
+            PercentNumber.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // PercentLabel
+            // 
             PercentLabel = new MetroLabel();
-            PercentLabel.Name = "PercentLabel";
-            PercentLabel.Text = "%";
-            PercentLabel.Size = new Size(21, 20);
-            PercentLabel.Location = new Point(109, 63);
-            PercentLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
+            PercentLabel.AutoSize = true;
+            PercentLabel.BackColor = Color.Lime;
             PercentLabel.FontWeight = MetroFramework.MetroLabelWeight.Bold;
-
-            AccountTypeLabel = new MetroLabel();
-            AccountTypeLabel.Name = "AccountTypeLabel";
-            AccountTypeLabel.Size = new Size(76, 23);
-            AccountTypeLabel.Location = new Point(158, 101);
-            AccountTypeLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
-            AccountTypeLabel.FontWeight = MetroFramework.MetroLabelWeight.Bold;
-            AccountTypeLabel.UseCustomForeColor = true;
-            AccountTypeLabel.ForeColor = Color.Lime;
-
-            if (Account.IsLive)
-                AccountTypeLabel.Text = "Live!";
+            PercentLabel.ForeColor = Color.Lime;
+            PercentLabel.Location = new Point(181, 60);
+            PercentLabel.Name = "PercentLabel";
+            PercentLabel.Size = new Size(22, 20);
+            PercentLabel.Text = "%";
+            PercentLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
+            PercentLabel.UseCustomForeColor = true;
+            // 
+            // OptionsButton
+            // 
+            OptionsButton = new MetroButton();
+            OptionsButton.Location = new Point(170, 136);
+            OptionsButton.Name = "OptionsButton";
+            OptionsButton.Size = new Size(76, 23);
+            OptionsButton.Text = "Options";
+            OptionsButton.UseSelectable = true;
+            OptionsButton.Click += new EventHandler(ShowOptionsForm);
+            // 
+            // RiskLabel
+            // 
+            RiskLabel = new MetroLabel();
+            RiskLabel.AutoSize = true;
+            RiskLabel.Location = new Point(23, 63);
+            RiskLabel.Name = "RiskLabel";
+            RiskLabel.Size = new Size(36, 20);
+            RiskLabel.Text = "Risk:";
+            RiskLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
+            // 
+            // SlippageLabel
+            // 
+            SlippageLabel = new MetroLabel();
+            SlippageLabel.AutoSize = true;
+            SlippageLabel.Location = new Point(23, 91);
+            SlippageLabel.Name = "SlippageLabel";
+            SlippageLabel.Size = new Size(64, 20);
+            SlippageLabel.Text = "Slippage:";
+            SlippageLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
+            // 
+            // SlippageNumber
+            // 
+            SlippageNumber = new NumericUpDown();
+            SlippageNumber.DecimalPlaces = 1;
+            SlippageNumber.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            SlippageNumber.Location = new Point(112, 93);
+            SlippageNumber.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            SlippageNumber.Name = "SlippageNumber";
+            SlippageNumber.Size = new Size(50, 22);
+            SlippageNumber.ThousandsSeparator = true;
+            SlippageNumber.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // SlippagePipsLabel
+            // 
+            SlippagePipsLabel = new MetroLabel();
+            SlippagePipsLabel.AutoSize = true;
+            SlippagePipsLabel.BackColor = Color.Lime;
+            SlippagePipsLabel.FontWeight = MetroFramework.MetroLabelWeight.Bold;
+            SlippagePipsLabel.ForeColor = Color.Lime;
+            SlippagePipsLabel.Location = new Point(181, 93);
+            SlippagePipsLabel.Name = "SlippagePipsLabel";
+            SlippagePipsLabel.Size = new Size(38, 20);
+            SlippagePipsLabel.Text = "Pips";
+            SlippagePipsLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
+            SlippagePipsLabel.UseCustomForeColor = true;
 
 
             // Adding Controls
@@ -192,10 +266,14 @@ namespace cAlgo
                 BuyButton,
                 SellButton,
                 OptionsButton,
-                AccountTypeLabel
+                RiskLabel,
+                SlippageLabel,
+                SlippageNumber,
+                SlippagePipsLabel
             });
 
             Application.Run(MainForm);
+
         }
 
         private void OptionsFormInitializer()
@@ -625,9 +703,9 @@ namespace cAlgo
 
             SellButton.Enabled = false;
             BuyButton.Enabled = false;
-
+            double slippagePips = decimal.ToDouble(SlippageNumber.Value);
             long volume = PositionVolume(sl.Value);
-            ExecuteMarketOrder(TradeType.Buy, GetSymbol(), volume, "QuickTrade", sl, GetTP());
+            ExecuteMarketOrder(TradeType.Buy, GetSymbol(), volume, "QuickTrade", sl, GetTP(), slippagePips);
 
             SellButton.Enabled = true;
             BuyButton.Enabled = true;
@@ -644,9 +722,9 @@ namespace cAlgo
 
             SellButton.Enabled = false;
             BuyButton.Enabled = false;
-
+            double slippagePips = decimal.ToDouble(SlippageNumber.Value);
             long volume = PositionVolume(sl.Value);
-            ExecuteMarketOrder(TradeType.Sell, GetSymbol(), volume, "QuickTrade", sl, GetTP());
+            ExecuteMarketOrder(TradeType.Sell, GetSymbol(), volume, "QuickTrade", sl, GetTP(), slippagePips);
 
             SellButton.Enabled = true;
             BuyButton.Enabled = true;
