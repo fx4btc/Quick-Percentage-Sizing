@@ -97,13 +97,16 @@
             // metroLabel1
             // 
             this.metroLabel1.AutoSize = true;
+            this.metroLabel1.BackColor = System.Drawing.Color.Lime;
             this.metroLabel1.FontWeight = MetroFramework.MetroLabelWeight.Bold;
+            this.metroLabel1.ForeColor = System.Drawing.Color.Lime;
             this.metroLabel1.Location = new System.Drawing.Point(109, 63);
             this.metroLabel1.Name = "metroLabel1";
-            this.metroLabel1.Size = new System.Drawing.Size(21, 20);
+            this.metroLabel1.Size = new System.Drawing.Size(22, 20);
             this.metroLabel1.TabIndex = 5;
             this.metroLabel1.Text = "%";
             this.metroLabel1.Theme = MetroFramework.MetroThemeStyle.Dark;
+            this.metroLabel1.UseCustomForeColor = true;
             // 
             // metroButton3
             // 

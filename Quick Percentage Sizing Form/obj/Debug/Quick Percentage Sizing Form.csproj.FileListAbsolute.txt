@@ -1,0 +1,13 @@
+C:\Users\Ahmad Noman\Documents\cAlgo\Sources\Robots\Quick Percentage Sizing\Quick Percentage Sizing Form\obj\Debug\Quick Percentage Sizing Form.csprojResolveAssemblyReference.cache
+C:\Users\Ahmad Noman\Documents\cAlgo\Sources\Robots\Quick Percentage Sizing\Quick Percentage Sizing Form\obj\Debug\Quick_Percentage_Sizing_Form.Form1.resources
+C:\Users\Ahmad Noman\Documents\cAlgo\Sources\Robots\Quick Percentage Sizing\Quick Percentage Sizing Form\obj\Debug\Quick_Percentage_Sizing_Form.Properties.Resources.resources
+C:\Users\Ahmad Noman\Documents\cAlgo\Sources\Robots\Quick Percentage Sizing\Quick Percentage Sizing Form\obj\Debug\Quick Percentage Sizing Form.csproj.GenerateResource.Cache
+C:\Users\Ahmad Noman\Documents\cAlgo\Sources\Robots\Quick Percentage Sizing\Quick Percentage Sizing Form\bin\Debug\Quick Percentage Sizing Form.exe.config
+C:\Users\Ahmad Noman\Documents\cAlgo\Sources\Robots\Quick Percentage Sizing\Quick Percentage Sizing Form\bin\Debug\Quick Percentage Sizing Form.exe
+C:\Users\Ahmad Noman\Documents\cAlgo\Sources\Robots\Quick Percentage Sizing\Quick Percentage Sizing Form\bin\Debug\Quick Percentage Sizing Form.pdb
+C:\Users\Ahmad Noman\Documents\cAlgo\Sources\Robots\Quick Percentage Sizing\Quick Percentage Sizing Form\bin\Debug\MetroFramework.Design.dll
+C:\Users\Ahmad Noman\Documents\cAlgo\Sources\Robots\Quick Percentage Sizing\Quick Percentage Sizing Form\bin\Debug\MetroFramework.dll
+C:\Users\Ahmad Noman\Documents\cAlgo\Sources\Robots\Quick Percentage Sizing\Quick Percentage Sizing Form\bin\Debug\MetroFramework.Fonts.dll
+C:\Users\Ahmad Noman\Documents\cAlgo\Sources\Robots\Quick Percentage Sizing\Quick Percentage Sizing Form\obj\Debug\Quick Percentage Sizing Form.exe
+C:\Users\Ahmad Noman\Documents\cAlgo\Sources\Robots\Quick Percentage Sizing\Quick Percentage Sizing Form\obj\Debug\Quick Percentage Sizing Form.pdb
+C:\Users\Ahmad Noman\Documents\cAlgo\Sources\Robots\Quick Percentage Sizing\Quick Percentage Sizing Form\obj\Debug\Quick_Percentage_Sizing_Form.Form2.resources
