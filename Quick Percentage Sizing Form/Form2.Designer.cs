@@ -60,6 +60,8 @@
             this.metroTextBox6 = new MetroFramework.Controls.MetroTextBox();
             this.metroTextBox7 = new MetroFramework.Controls.MetroTextBox();
             this.metroProgressBar1 = new MetroFramework.Controls.MetroProgressBar();
+            this.metroLabel10 = new MetroFramework.Controls.MetroLabel();
+            this.metroComboBox5 = new MetroFramework.Controls.MetroComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.metroGrid1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -534,11 +536,34 @@
             this.metroProgressBar1.Size = new System.Drawing.Size(186, 23);
             this.metroProgressBar1.TabIndex = 29;
             // 
+            // metroLabel10
+            // 
+            this.metroLabel10.AutoSize = true;
+            this.metroLabel10.FontWeight = MetroFramework.MetroLabelWeight.Bold;
+            this.metroLabel10.Location = new System.Drawing.Point(159, 658);
+            this.metroLabel10.Name = "metroLabel10";
+            this.metroLabel10.Size = new System.Drawing.Size(167, 20);
+            this.metroLabel10.TabIndex = 30;
+            this.metroLabel10.Text = "Entry On Candle Close:";
+            this.metroLabel10.Theme = MetroFramework.MetroThemeStyle.Dark;
+            // 
+            // metroComboBox5
+            // 
+            this.metroComboBox5.FormattingEnabled = true;
+            this.metroComboBox5.ItemHeight = 24;
+            this.metroComboBox5.Location = new System.Drawing.Point(371, 648);
+            this.metroComboBox5.Name = "metroComboBox5";
+            this.metroComboBox5.Size = new System.Drawing.Size(121, 30);
+            this.metroComboBox5.TabIndex = 31;
+            this.metroComboBox5.UseSelectable = true;
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(670, 749);
+            this.Controls.Add(this.metroComboBox5);
+            this.Controls.Add(this.metroLabel10);
             this.Controls.Add(this.metroProgressBar1);
             this.Controls.Add(this.metroTextBox7);
             this.Controls.Add(this.metroTextBox6);
@@ -609,5 +634,7 @@
         private MetroFramework.Controls.MetroTextBox metroTextBox6;
         private MetroFramework.Controls.MetroTextBox metroTextBox7;
         private MetroFramework.Controls.MetroProgressBar metroProgressBar1;
+        private MetroFramework.Controls.MetroLabel metroLabel10;
+        private MetroFramework.Controls.MetroComboBox metroComboBox5;
     }
 }

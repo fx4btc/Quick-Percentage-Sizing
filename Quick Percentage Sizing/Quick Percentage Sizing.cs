@@ -47,6 +47,7 @@ namespace cAlgo
         private MetroComboBox FixedPipsTPComboBox;
         private MetroComboBox ATRSLComboBox;
         private MetroComboBox ATRTPComboBox;
+        private MetroComboBox OnCandleCloseComboBox;
         private MetroTextBox AddSymbolTextBox;
         private MetroTextBox PipsSLTextBox;
         private MetroTextBox PipsTPTextBox;
@@ -60,6 +61,7 @@ namespace cAlgo
         private MetroLabel SlippageLabel;
         private NumericUpDown SlippageNumber;
         private MetroLabel SlippagePipsLabel;
+        private MetroLabel OnCandleCloseLabel;
 
 
 
@@ -78,7 +80,7 @@ namespace cAlgo
         double ATRMultiplierTP = 0;
         int ATRPeriodsSL = 0;
         int ATRPeriodsTP = 0;
-
+        bool EntryOnCandleClose = false;
 
         // cBot Methods
         protected override void OnStart()
@@ -158,7 +160,7 @@ namespace cAlgo
             // 
             PercentNumber = new NumericUpDown();
             PercentNumber.DecimalPlaces = 1;
-            PercentNumber.Increment = new decimal(new int[] 
+            PercentNumber.Increment = new decimal(new int[]
             {
                 1,
                 0,
@@ -169,7 +171,7 @@ namespace cAlgo
             PercentNumber.Name = "PercentNumber";
             PercentNumber.Size = new Size(50, 22);
             PercentNumber.ThousandsSeparator = true;
-            PercentNumber.Value = new decimal(new int[] 
+            PercentNumber.Value = new decimal(new int[]
             {
                 1,
                 0,
@@ -225,7 +227,7 @@ namespace cAlgo
             // 
             SlippageNumber = new NumericUpDown();
             SlippageNumber.DecimalPlaces = 1;
-            SlippageNumber.Increment = new decimal(new int[] 
+            SlippageNumber.Increment = new decimal(new int[]
             {
                 1,
                 0,
@@ -233,7 +235,7 @@ namespace cAlgo
                 65536
             });
             SlippageNumber.Location = new Point(112, 93);
-            SlippageNumber.Minimum = new decimal(new int[] 
+            SlippageNumber.Minimum = new decimal(new int[]
             {
                 1,
                 0,
@@ -243,7 +245,7 @@ namespace cAlgo
             SlippageNumber.Name = "SlippageNumber";
             SlippageNumber.Size = new Size(50, 22);
             SlippageNumber.ThousandsSeparator = true;
-            SlippageNumber.Value = new decimal(new int[] 
+            SlippageNumber.Value = new decimal(new int[]
             {
                 1,
                 0,
@@ -267,7 +269,7 @@ namespace cAlgo
 
 
             // Adding Controls
-            MainForm.Controls.AddRange(new Control[] 
+            MainForm.Controls.AddRange(new Control[]
             {
                 SymbolsComboBox,
                 PercentNumber,
@@ -291,7 +293,7 @@ namespace cAlgo
             OptionsForm = new MetroForm();
             OptionsForm.Name = "OptionsForm";
             OptionsForm.Text = "Options";
-            OptionsForm.Size = new Size(650, 689);
+            OptionsForm.Size = new Size(650, 730);
             OptionsForm.StartPosition = FormStartPosition.CenterScreen;
             OptionsForm.Resizable = false;
             OptionsForm.Theme = MetroFramework.MetroThemeStyle.Dark;
@@ -370,6 +372,13 @@ namespace cAlgo
             ATRPeriodsLabel.Location = new Point(72, 604);
             ATRPeriodsLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
 
+            OnCandleCloseLabel = new MetroLabel();
+            OnCandleCloseLabel.Name = "OnCandleCloseLabel";
+            OnCandleCloseLabel.Text = "Entry On Candle Close:";
+            OnCandleCloseLabel.Size = new Size(167, 20);
+            OnCandleCloseLabel.Location = new Point(159, 658);
+            OnCandleCloseLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
+            OnCandleCloseLabel.FontWeight = MetroFramework.MetroLabelWeight.Bold;
 
             // Buttons
             AddButton = new MetroButton();
@@ -412,7 +421,7 @@ namespace cAlgo
             SaveButton.Name = "SaveButton";
             SaveButton.Text = "Save";
             SaveButton.Size = new Size(75, 23);
-            SaveButton.Location = new Point(279, 654);
+            SaveButton.Location = new Point(279, 694);
             SaveButton.TextAlign = ContentAlignment.MiddleCenter;
             SaveButton.FontWeight = MetroFramework.MetroButtonWeight.Bold;
             SaveButton.Click += new EventHandler(SaveOptions);
@@ -528,6 +537,17 @@ namespace cAlgo
             else
                 ATRTPComboBox.SelectedIndex = 0;
 
+            OnCandleCloseComboBox = new MetroComboBox();
+            OnCandleCloseComboBox.Name = "OnCandleCloseComboBox";
+            OnCandleCloseComboBox.Size = new Size(121, 30);
+            OnCandleCloseComboBox.Location = new Point(371, 648);
+            OnCandleCloseComboBox.Items.Add("No");
+            OnCandleCloseComboBox.Items.Add("Yes");
+            if (EntryOnCandleClose)
+                OnCandleCloseComboBox.SelectedIndex = 1;
+            else
+                OnCandleCloseComboBox.SelectedIndex = 0;
+
             // Grid
             SymbolsGrid = new MetroGrid();
             SymbolsGrid.Name = "SymbolsGrid";
@@ -567,11 +587,11 @@ namespace cAlgo
             OptionsProgressBar = new MetroProgressBar();
             OptionsProgressBar.Name = "OptionsProgressBar";
             OptionsProgressBar.Size = new Size(186, 23);
-            OptionsProgressBar.Location = new Point(20, 654);
+            OptionsProgressBar.Location = new Point(20, 694);
             OptionsProgressBar.Visible = false;
 
             // Adding Controls
-            OptionsForm.Controls.AddRange(new Control[] 
+            OptionsForm.Controls.AddRange(new Control[]
             {
                 SymbolsGrid,
                 SymbolsLabel,
@@ -599,6 +619,8 @@ namespace cAlgo
                 FixedPipsTPComboBox,
                 ATRSLComboBox,
                 ATRTPComboBox,
+                OnCandleCloseLabel,
+                OnCandleCloseComboBox,
                 OptionsProgressBar
             });
 
@@ -655,6 +677,11 @@ namespace cAlgo
                 ATRTP = true;
             else
                 ATRTP = false;
+
+            if (OnCandleCloseComboBox.SelectedIndex == 1)
+                EntryOnCandleClose = true;
+            else
+                EntryOnCandleClose = false;
 
             double.TryParse(PipsSLTextBox.Text.ToString(), out PipsSL);
             double.TryParse(PipsTPTextBox.Text.ToString(), out PipsTP);
@@ -714,7 +741,10 @@ namespace cAlgo
             BuyButton.Enabled = false;
             double slippagePips = decimal.ToDouble(SlippageNumber.Value);
             long volume = PositionVolume(sl.Value);
-            ExecuteMarketOrder(TradeType.Buy, GetSymbol(), volume, "QuickTrade", sl, GetTP(), slippagePips);
+
+
+            if (OnCandleClose(TradeType.Buy))
+                ExecuteMarketOrder(TradeType.Buy, Symbol, volume, "QuickTrade", sl, GetTP(), slippagePips);
 
             SellButton.Enabled = true;
             BuyButton.Enabled = true;
@@ -733,7 +763,9 @@ namespace cAlgo
             BuyButton.Enabled = false;
             double slippagePips = decimal.ToDouble(SlippageNumber.Value);
             long volume = PositionVolume(sl.Value);
-            ExecuteMarketOrder(TradeType.Sell, GetSymbol(), volume, "QuickTrade", sl, GetTP(), slippagePips);
+
+            if (OnCandleClose(TradeType.Sell))
+                ExecuteMarketOrder(TradeType.Sell, GetSymbol(), volume, "QuickTrade", sl, GetTP(), slippagePips);
 
             SellButton.Enabled = true;
             BuyButton.Enabled = true;
@@ -809,7 +841,8 @@ namespace cAlgo
 
                     SymbolsGrid.FirstDisplayedScrollingRowIndex = previousRow.Index;
                     SymbolsGrid.PerformLayout();
-                } catch (ArgumentOutOfRangeException)
+                }
+                catch (ArgumentOutOfRangeException)
                 {
                     Print("Symbol was out of range.");
                 }
@@ -835,7 +868,8 @@ namespace cAlgo
 
                     SymbolsGrid.FirstDisplayedScrollingRowIndex = nextRow.Index;
                     SymbolsGrid.PerformLayout();
-                } catch (ArgumentOutOfRangeException)
+                }
+                catch (ArgumentOutOfRangeException)
                 {
                     Print("Symbol was out of range.");
                 }
@@ -931,6 +965,32 @@ namespace cAlgo
             }
 
             return false;
+        }
+
+
+        private bool OnCandleClose(TradeType tradeType)
+        {
+            if (EntryOnCandleClose)
+            {
+                Symbol sym = GetSymbol();
+                MarketSeries symSeries = MarketData.GetSeries(sym.Code, MarketSeries.TimeFrame);
+                if (tradeType == TradeType.Buy)
+                {
+                    if (sym.Bid <= MarketSeries.Close.Last(1) || sym.Ask <= MarketSeries.Close.Last(1))
+                        return true;
+                    else
+                        return false;
+                }
+                else
+                {
+                    if (sym.Bid >= MarketSeries.Close.Last(1) || sym.Ask >= MarketSeries.Close.Last(1))
+                        return true;
+                    else
+                        return false;
+                }
+            }
+            else
+                return true;
         }
 
 
