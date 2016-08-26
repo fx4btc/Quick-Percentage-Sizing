@@ -974,16 +974,17 @@ namespace cAlgo
             {
                 Symbol sym = GetSymbol();
                 MarketSeries symSeries = MarketData.GetSeries(sym.Code, MarketSeries.TimeFrame);
+
                 if (tradeType == TradeType.Buy)
                 {
-                    if (sym.Bid <= MarketSeries.Close.Last(1) || sym.Ask <= MarketSeries.Close.Last(1))
+                    if (sym.Bid <= symSeries.Close.Last(1) || sym.Ask <= symSeries.Close.Last(1))
                         return true;
                     else
                         return false;
                 }
                 else
                 {
-                    if (sym.Bid >= MarketSeries.Close.Last(1) || sym.Ask >= MarketSeries.Close.Last(1))
+                    if (sym.Bid >= symSeries.Close.Last(1) || sym.Ask >= symSeries.Close.Last(1))
                         return true;
                     else
                         return false;
