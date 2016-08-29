@@ -62,12 +62,16 @@ namespace cAlgo
         private NumericUpDown SlippageNumber;
         private MetroLabel SlippagePipsLabel;
         private MetroLabel OnCandleCloseLabel;
+        private MetroLabel EntryParametersLabel;
+        private MetroLabel OneOpenPositionLabel;
+        private MetroComboBox OneOpenPositionComboBox;
 
 
 
 
         // Collections
         List<string> SymbolsList = new List<string>();
+        List<string> OpenPositionsSymbols = new List<string>();
 
         // Options
         bool FixedSL = false;
@@ -81,6 +85,11 @@ namespace cAlgo
         int ATRPeriodsSL = 0;
         int ATRPeriodsTP = 0;
         bool EntryOnCandleClose = false;
+        bool OneOpenPosition = false;
+
+
+        // Trades Label
+        string label = "QuickTrade";
 
         // cBot Methods
         protected override void OnStart()
@@ -90,8 +99,18 @@ namespace cAlgo
                 SymbolsList.Add(sym);
             }
 
+            foreach (Position pos in Positions)
+            {
+                if (pos.Label == label)
+                {
+                    if (!OpenPositionsSymbols.Contains(pos.SymbolCode))
+                        OpenPositionsSymbols.Add(pos.SymbolCode);
+                }
+            }
 
+            Positions.Closed += PositionsOnClosed;
             Task showMainForm = Task.Factory.StartNew(() => { MainFormInitializer(); });
+
 
         }
 
@@ -132,6 +151,7 @@ namespace cAlgo
             SymbolsComboBox.Location = new Point(23, 18);
             SymbolsComboBox.Size = new Size(139, 30);
             SymbolsComboBox.UseSelectable = true;
+            SymbolsComboBox.SelectedIndexChanged += new EventHandler(SymbolsComboBoxSelectionChanged);
 
             FillSymbolsComboBox();
 
@@ -293,7 +313,7 @@ namespace cAlgo
             OptionsForm = new MetroForm();
             OptionsForm.Name = "OptionsForm";
             OptionsForm.Text = "Options";
-            OptionsForm.Size = new Size(650, 730);
+            OptionsForm.Size = new Size(603, 739);
             OptionsForm.StartPosition = FormStartPosition.CenterScreen;
             OptionsForm.Resizable = false;
             OptionsForm.Theme = MetroFramework.MetroThemeStyle.Dark;
@@ -309,7 +329,7 @@ namespace cAlgo
             SymbolsLabel.Name = "SymbolsLabel";
             SymbolsLabel.Text = "Symbols";
             SymbolsLabel.Size = new Size(68, 20);
-            SymbolsLabel.Location = new Point(20, 73);
+            SymbolsLabel.Location = new Point(23, 73);
             SymbolsLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
             SymbolsLabel.FontWeight = MetroFramework.MetroLabelWeight.Bold;
 
@@ -317,7 +337,7 @@ namespace cAlgo
             SLAndTPLabel.Name = "SLAndTPLabel";
             SLAndTPLabel.Text = "Stop Loss And Take Profit";
             SLAndTPLabel.Size = new Size(189, 20);
-            SLAndTPLabel.Location = new Point(20, 314);
+            SLAndTPLabel.Location = new Point(20, 290);
             SLAndTPLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
             SLAndTPLabel.FontWeight = MetroFramework.MetroLabelWeight.Bold;
 
@@ -325,7 +345,7 @@ namespace cAlgo
             SLLabel.Name = "SLLabel";
             SLLabel.Text = "Stop Loss";
             SLLabel.Size = new Size(76, 20);
-            SLLabel.Location = new Point(254, 347);
+            SLLabel.Location = new Point(228, 309);
             SLLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
             SLLabel.FontWeight = MetroFramework.MetroLabelWeight.Bold;
 
@@ -333,7 +353,7 @@ namespace cAlgo
             TPLabel.Name = "TPLabel";
             TPLabel.Text = "Take Profit";
             TPLabel.Size = new Size(85, 20);
-            TPLabel.Location = new Point(427, 347);
+            TPLabel.Location = new Point(399, 309);
             TPLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
             TPLabel.FontWeight = MetroFramework.MetroLabelWeight.Bold;
 
@@ -341,51 +361,65 @@ namespace cAlgo
             FixedPipsBasedLabel.Name = "FixedPipsBasedLabel";
             FixedPipsBasedLabel.Text = "Fixed Pips Based?";
             FixedPipsBasedLabel.Size = new Size(117, 20);
-            FixedPipsBasedLabel.Location = new Point(72, 396);
+            FixedPipsBasedLabel.Location = new Point(42, 343);
             FixedPipsBasedLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
 
             PipsAmountLabel = new MetroLabel();
             PipsAmountLabel.Name = "PipsAmountLabel";
             PipsAmountLabel.Text = "Pips Amount";
             PipsAmountLabel.Size = new Size(98, 20);
-            PipsAmountLabel.Location = new Point(72, 447);
+            PipsAmountLabel.Location = new Point(43, 389);
             PipsAmountLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
 
             ATRBasedLabel = new MetroLabel();
             ATRBasedLabel.Name = "ATRBasedLabel";
             ATRBasedLabel.Text = "ATR Based?";
             ATRBasedLabel.Size = new Size(79, 20);
-            ATRBasedLabel.Location = new Point(72, 502);
+            ATRBasedLabel.Location = new Point(42, 434);
             ATRBasedLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
 
             ATRMultiplierLabel = new MetroLabel();
             ATRMultiplierLabel.Name = "ATRMultiplierLabel";
             ATRMultiplierLabel.Text = "ATR Multiplier : ";
             ATRMultiplierLabel.Size = new Size(104, 20);
-            ATRMultiplierLabel.Location = new Point(72, 556);
+            ATRMultiplierLabel.Location = new Point(42, 524);
             ATRMultiplierLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
 
             ATRPeriodsLabel = new MetroLabel();
             ATRPeriodsLabel.Name = "ATRPeriodsLabel";
             ATRPeriodsLabel.Text = "ATR Periods : ";
             ATRPeriodsLabel.Size = new Size(92, 20);
-            ATRPeriodsLabel.Location = new Point(72, 604);
+            ATRPeriodsLabel.Location = new Point(43, 479);
             ATRPeriodsLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
 
             OnCandleCloseLabel = new MetroLabel();
             OnCandleCloseLabel.Name = "OnCandleCloseLabel";
-            OnCandleCloseLabel.Text = "Entry On Candle Close:";
-            OnCandleCloseLabel.Size = new Size(167, 20);
-            OnCandleCloseLabel.Location = new Point(159, 658);
+            OnCandleCloseLabel.Text = "On Candle Close:";
+            OnCandleCloseLabel.Size = new Size(116, 20);
+            OnCandleCloseLabel.Location = new Point(42, 605);
             OnCandleCloseLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
-            OnCandleCloseLabel.FontWeight = MetroFramework.MetroLabelWeight.Bold;
+
+            EntryParametersLabel = new MetroLabel();
+            EntryParametersLabel.Name = "EntryParametersLabel";
+            EntryParametersLabel.Text = "Entry Parameters";
+            EntryParametersLabel.Size = new Size(131, 20);
+            EntryParametersLabel.Location = new Point(19, 568);
+            EntryParametersLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
+            EntryParametersLabel.FontWeight = MetroFramework.MetroLabelWeight.Bold;
+
+            OneOpenPositionLabel = new MetroLabel();
+            OneOpenPositionLabel.Name = "OneOpenPositionLabel";
+            OneOpenPositionLabel.Text = "One Open Position Only:";
+            OneOpenPositionLabel.Size = new Size(162, 20);
+            OneOpenPositionLabel.Location = new Point(42, 656);
+            OneOpenPositionLabel.Theme = MetroFramework.MetroThemeStyle.Dark;
 
             // Buttons
             AddButton = new MetroButton();
             AddButton.Name = "AddButton";
             AddButton.Text = "Add";
             AddButton.Size = new Size(75, 23);
-            AddButton.Location = new Point(552, 106);
+            AddButton.Location = new Point(505, 106);
             AddButton.TextAlign = ContentAlignment.MiddleCenter;
             AddButton.FontWeight = MetroFramework.MetroButtonWeight.Bold;
             AddButton.Click += new EventHandler(AddSymbol);
@@ -394,7 +428,7 @@ namespace cAlgo
             MoveUpButton.Name = "MoveUpButton";
             MoveUpButton.Text = "Move Up";
             MoveUpButton.Size = new Size(95, 23);
-            MoveUpButton.Location = new Point(377, 147);
+            MoveUpButton.Location = new Point(330, 147);
             MoveUpButton.TextAlign = ContentAlignment.MiddleCenter;
             MoveUpButton.FontWeight = MetroFramework.MetroButtonWeight.Bold;
             MoveUpButton.Click += new EventHandler(MoveUpSymbols);
@@ -403,7 +437,7 @@ namespace cAlgo
             MoveDownButton.Name = "MoveDownButton";
             MoveDownButton.Text = "Move Down";
             MoveDownButton.Size = new Size(95, 23);
-            MoveDownButton.Location = new Point(478, 147);
+            MoveDownButton.Location = new Point(431, 147);
             MoveDownButton.TextAlign = ContentAlignment.MiddleCenter;
             MoveDownButton.FontWeight = MetroFramework.MetroButtonWeight.Bold;
             MoveDownButton.Click += new EventHandler(MoveDownSymbols);
@@ -412,7 +446,7 @@ namespace cAlgo
             DeleteSymbolsButton.Name = "DeleteSymbolsButton";
             DeleteSymbolsButton.Text = "Delete Selected Symbols";
             DeleteSymbolsButton.Size = new Size(195, 23);
-            DeleteSymbolsButton.Location = new Point(377, 260);
+            DeleteSymbolsButton.Location = new Point(330, 230);
             DeleteSymbolsButton.TextAlign = ContentAlignment.MiddleCenter;
             DeleteSymbolsButton.FontWeight = MetroFramework.MetroButtonWeight.Bold;
             DeleteSymbolsButton.Click += new EventHandler(DeleteSymbols);
@@ -421,7 +455,7 @@ namespace cAlgo
             SaveButton.Name = "SaveButton";
             SaveButton.Text = "Save";
             SaveButton.Size = new Size(75, 23);
-            SaveButton.Location = new Point(279, 694);
+            SaveButton.Location = new Point(275, 697);
             SaveButton.TextAlign = ContentAlignment.MiddleCenter;
             SaveButton.FontWeight = MetroFramework.MetroButtonWeight.Bold;
             SaveButton.Click += new EventHandler(SaveOptions);
@@ -431,12 +465,12 @@ namespace cAlgo
             AddSymbolTextBox.Name = "AddSymbolTextBox";
             AddSymbolTextBox.Text = "Enter Symbol Code";
             AddSymbolTextBox.Size = new Size(154, 23);
-            AddSymbolTextBox.Location = new Point(377, 106);
+            AddSymbolTextBox.Location = new Point(330, 106);
 
             PipsSLTextBox = new MetroTextBox();
             PipsSLTextBox.Name = "PipsSLTextBox";
             PipsSLTextBox.Size = new Size(121, 30);
-            PipsSLTextBox.Location = new Point(233, 437);
+            PipsSLTextBox.Location = new Point(204, 389);
             if (PipsSL != 0)
                 PipsSLTextBox.Text = PipsSL.ToString();
             else
@@ -446,7 +480,7 @@ namespace cAlgo
             PipsTPTextBox.Name = "PipsTPTextBox";
             PipsTPTextBox.Text = "10";
             PipsTPTextBox.Size = new Size(121, 30);
-            PipsTPTextBox.Location = new Point(410, 437);
+            PipsTPTextBox.Location = new Point(381, 389);
             if (PipsTP != 0)
                 PipsTPTextBox.Text = PipsTP.ToString();
             else
@@ -456,7 +490,7 @@ namespace cAlgo
             ATRMultiplierSLTextBox.Name = "ATRMultiplierSLTextBox";
             ATRMultiplierSLTextBox.Text = "2";
             ATRMultiplierSLTextBox.Size = new Size(121, 30);
-            ATRMultiplierSLTextBox.Location = new Point(233, 546);
+            ATRMultiplierSLTextBox.Location = new Point(204, 524);
             if (ATRMultiplierSL != 0)
                 ATRMultiplierSLTextBox.Text = ATRMultiplierSL.ToString();
             else
@@ -466,7 +500,7 @@ namespace cAlgo
             ATRMultiplierTPTextBox.Name = "ATRMultiplierTPTextBox";
             ATRMultiplierTPTextBox.Text = "2";
             ATRMultiplierTPTextBox.Size = new Size(121, 30);
-            ATRMultiplierTPTextBox.Location = new Point(410, 546);
+            ATRMultiplierTPTextBox.Location = new Point(381, 524);
             if (ATRMultiplierTP != 0)
                 ATRMultiplierTPTextBox.Text = ATRMultiplierTP.ToString();
             else
@@ -476,7 +510,7 @@ namespace cAlgo
             ATRPeriodsSLTextBox.Name = "ATRPeriodsSLTextBox";
             ATRPeriodsSLTextBox.Text = "14";
             ATRPeriodsSLTextBox.Size = new Size(121, 30);
-            ATRPeriodsSLTextBox.Location = new Point(233, 594);
+            ATRPeriodsSLTextBox.Location = new Point(204, 479);
             if (ATRPeriodsSL != 0)
                 ATRPeriodsSLTextBox.Text = ATRPeriodsSL.ToString();
             else
@@ -486,7 +520,7 @@ namespace cAlgo
             ATRPeriodsTPTextBox.Name = "ATRPeriodsTPTextBox";
             ATRPeriodsTPTextBox.Text = "14";
             ATRPeriodsTPTextBox.Size = new Size(121, 30);
-            ATRPeriodsTPTextBox.Location = new Point(410, 594);
+            ATRPeriodsTPTextBox.Location = new Point(381, 479);
             if (ATRPeriodsTP != 0)
                 ATRPeriodsTPTextBox.Text = ATRPeriodsTP.ToString();
             else
@@ -496,7 +530,7 @@ namespace cAlgo
             FixedPipsSLComboBox = new MetroComboBox();
             FixedPipsSLComboBox.Name = "FixedPipsSLComboBox";
             FixedPipsSLComboBox.Size = new Size(121, 30);
-            FixedPipsSLComboBox.Location = new Point(233, 386);
+            FixedPipsSLComboBox.Location = new Point(204, 343);
             FixedPipsSLComboBox.Items.Add("No");
             FixedPipsSLComboBox.Items.Add("Yes");
             if (FixedSL)
@@ -507,7 +541,7 @@ namespace cAlgo
             FixedPipsTPComboBox = new MetroComboBox();
             FixedPipsTPComboBox.Name = "FixedPipsTPComboBox";
             FixedPipsTPComboBox.Size = new Size(121, 30);
-            FixedPipsTPComboBox.Location = new Point(410, 386);
+            FixedPipsTPComboBox.Location = new Point(381, 343);
             FixedPipsTPComboBox.Items.Add("No");
             FixedPipsTPComboBox.Items.Add("Yes");
             if (FixedTP)
@@ -518,7 +552,7 @@ namespace cAlgo
             ATRSLComboBox = new MetroComboBox();
             ATRSLComboBox.Name = "ATRSLComboBox";
             ATRSLComboBox.Size = new Size(121, 30);
-            ATRSLComboBox.Location = new Point(233, 492);
+            ATRSLComboBox.Location = new Point(204, 434);
             ATRSLComboBox.Items.Add("No");
             ATRSLComboBox.Items.Add("Yes");
             if (ATRSL)
@@ -529,7 +563,7 @@ namespace cAlgo
             ATRTPComboBox = new MetroComboBox();
             ATRTPComboBox.Name = "ATRTPComboBox";
             ATRTPComboBox.Size = new Size(121, 30);
-            ATRTPComboBox.Location = new Point(410, 492);
+            ATRTPComboBox.Location = new Point(381, 434);
             ATRTPComboBox.Items.Add("No");
             ATRTPComboBox.Items.Add("Yes");
             if (ATRTP)
@@ -540,7 +574,7 @@ namespace cAlgo
             OnCandleCloseComboBox = new MetroComboBox();
             OnCandleCloseComboBox.Name = "OnCandleCloseComboBox";
             OnCandleCloseComboBox.Size = new Size(121, 30);
-            OnCandleCloseComboBox.Location = new Point(371, 648);
+            OnCandleCloseComboBox.Location = new Point(218, 595);
             OnCandleCloseComboBox.Items.Add("No");
             OnCandleCloseComboBox.Items.Add("Yes");
             if (EntryOnCandleClose)
@@ -548,17 +582,30 @@ namespace cAlgo
             else
                 OnCandleCloseComboBox.SelectedIndex = 0;
 
+
+            OneOpenPositionComboBox = new MetroComboBox();
+            OneOpenPositionComboBox.Name = "OneOpenPositionComboBox";
+            OneOpenPositionComboBox.Size = new Size(121, 30);
+            OneOpenPositionComboBox.Location = new Point(218, 646);
+            OneOpenPositionComboBox.Items.Add("No");
+            OneOpenPositionComboBox.Items.Add("Yes");
+            if (OneOpenPosition)
+                OneOpenPositionComboBox.SelectedIndex = 1;
+            else
+                OneOpenPositionComboBox.SelectedIndex = 0;
+
             // Grid
             SymbolsGrid = new MetroGrid();
             SymbolsGrid.Name = "SymbolsGrid";
             SymbolsGrid.Size = new Size(280, 177);
-            SymbolsGrid.Location = new Point(20, 106);
+            SymbolsGrid.Location = new Point(23, 106);
             SymbolsGrid.AllowUserToAddRows = false;
             SymbolsGrid.AllowUserToDeleteRows = false;
             SymbolsGrid.AllowUserToOrderColumns = false;
             SymbolsGrid.AllowUserToResizeColumns = false;
             SymbolsGrid.AllowUserToResizeRows = false;
             SymbolsGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            SymbolsGrid.ReadOnly = true;
 
             DataGridViewTextBoxColumn numberColumn = new DataGridViewTextBoxColumn();
             numberColumn.Name = "numberColumn";
@@ -587,7 +634,7 @@ namespace cAlgo
             OptionsProgressBar = new MetroProgressBar();
             OptionsProgressBar.Name = "OptionsProgressBar";
             OptionsProgressBar.Size = new Size(186, 23);
-            OptionsProgressBar.Location = new Point(20, 694);
+            OptionsProgressBar.Location = new Point(19, 697);
             OptionsProgressBar.Visible = false;
 
             // Adding Controls
@@ -619,8 +666,11 @@ namespace cAlgo
                 FixedPipsTPComboBox,
                 ATRSLComboBox,
                 ATRTPComboBox,
+                EntryParametersLabel,
                 OnCandleCloseLabel,
                 OnCandleCloseComboBox,
+                OneOpenPositionLabel,
+                OneOpenPositionComboBox,
                 OptionsProgressBar
             });
 
@@ -628,6 +678,40 @@ namespace cAlgo
         }
 
         // Events
+
+        private void PositionsOnClosed(PositionClosedEventArgs args)
+        {
+            var position = args.Position;
+            if (position.Label == label)
+            {
+                if (OpenPositionsSymbols.Contains(position.SymbolCode))
+                    OpenPositionsSymbols.Remove(position.SymbolCode);
+
+                if (SymbolsComboBox.Text == position.SymbolCode)
+                {
+                    SellButton.Enabled = true;
+                    BuyButton.Enabled = true;
+                }
+            }
+        }
+
+
+        private void SymbolsComboBoxSelectionChanged(object sender, EventArgs e)
+        {
+            if (OneOpenPosition)
+            {
+                if (OpenPositionsSymbols.Contains(SymbolsComboBox.Text))
+                {
+                    SellButton.Enabled = false;
+                    BuyButton.Enabled = false;
+                }
+                else
+                {
+                    SellButton.Enabled = true;
+                    BuyButton.Enabled = true;
+                }
+            }
+        }
 
         private void MainFormShown(object sender, EventArgs e)
         {
@@ -641,6 +725,8 @@ namespace cAlgo
 
         private void OptionsFormLoad(object sender, EventArgs e)
         {
+            SellButton.Enabled = true;
+            BuyButton.Enabled = true;
             MainForm.Enabled = false;
         }
 
@@ -654,6 +740,12 @@ namespace cAlgo
         {
             MainForm.Enabled = true;
             MainForm.TopMost = true;
+
+            if (OpenPositionsSymbols.Contains(SymbolsComboBox.Text))
+            {
+                SellButton.Enabled = false;
+                BuyButton.Enabled = false;
+            }
         }
 
         private void SaveOptions(object sender, EventArgs e)
@@ -682,6 +774,11 @@ namespace cAlgo
                 EntryOnCandleClose = true;
             else
                 EntryOnCandleClose = false;
+
+            if (OneOpenPositionComboBox.SelectedIndex == 1)
+                OneOpenPosition = true;
+            else
+                OneOpenPosition = false;
 
             double.TryParse(PipsSLTextBox.Text.ToString(), out PipsSL);
             double.TryParse(PipsTPTextBox.Text.ToString(), out PipsTP);
@@ -737,17 +834,26 @@ namespace cAlgo
                 return;
             }
 
-            SellButton.Enabled = false;
-            BuyButton.Enabled = false;
             double slippagePips = decimal.ToDouble(SlippageNumber.Value);
             long volume = PositionVolume(sl.Value);
 
 
-            if (OnCandleClose(TradeType.Buy))
-                ExecuteMarketOrder(TradeType.Buy, Symbol, volume, "QuickTrade", sl, GetTP(), slippagePips);
 
-            SellButton.Enabled = true;
-            BuyButton.Enabled = true;
+            if (OnCandleClose(TradeType.Buy))
+            {
+                SellButton.Enabled = false;
+                BuyButton.Enabled = false;
+                
+                ExecuteMarketOrder(TradeType.Buy, GetSymbol(), volume, label, sl, GetTP(), slippagePips);
+
+                if (!OneOpenPosition)
+                {
+                    SellButton.Enabled = true;
+                    BuyButton.Enabled = true;
+                }
+                else if (!OpenPositionsSymbols.Contains(GetSymbol().Code))
+                    OpenPositionsSymbols.Add(GetSymbol().Code);
+            }
         }
 
         private void ExecuteSellOrder(object sender, EventArgs e)
@@ -759,17 +865,26 @@ namespace cAlgo
                 return;
             }
 
-            SellButton.Enabled = false;
-            BuyButton.Enabled = false;
             double slippagePips = decimal.ToDouble(SlippageNumber.Value);
             long volume = PositionVolume(sl.Value);
 
+
+
             if (OnCandleClose(TradeType.Sell))
-                ExecuteMarketOrder(TradeType.Sell, GetSymbol(), volume, "QuickTrade", sl, GetTP(), slippagePips);
+            {
+                SellButton.Enabled = false;
+                BuyButton.Enabled = false;
 
-            SellButton.Enabled = true;
-            BuyButton.Enabled = true;
+                ExecuteMarketOrder(TradeType.Sell, GetSymbol(), volume, label, sl, GetTP(), slippagePips);
 
+                if (!OneOpenPosition)
+                {
+                    SellButton.Enabled = true;
+                    BuyButton.Enabled = true;
+                }
+                else if (!OpenPositionsSymbols.Contains(GetSymbol().Code))
+                    OpenPositionsSymbols.Add(GetSymbol().Code);
+            }
         }
 
         private void ShowOptionsForm(object sender, EventArgs e)
