@@ -25,7 +25,7 @@ namespace Quick_Percentage_Sizing_Form
 
         private void metroButton3_Click(object sender, EventArgs e)
         {
-            Form2 frm2 = new Form2();
+            OptionsForm frm2 = new OptionsForm();
             frm2.Show();
         }
     }
